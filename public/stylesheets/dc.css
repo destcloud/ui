@@ -1,0 +1,672 @@
+/*
+ * Color
+ *
+ * fg: #f8f8fc;
+ * bg: #2b2b55;
+ *
+ */
+
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font: 12px sans-serif;
+}
+
+/*
+ * z-index
+ */
+.jsplumb-connector {
+    z-index: 4;
+}
+.jsplumb-endpoint {
+    z-index: 5;
+}
+.jsplumb-overlay {
+    z-index: 6;
+}
+.menu {
+    z-index: 10;
+}
+
+#scenario-list-area {
+    z-index: 20;
+}
+
+/*
+ * effect
+ */
+.unit {
+    margin-left: 5px;
+}
+
+.input-error {
+    background-color: #dc4e4e;
+}
+
+/*
+ * container
+ */
+h1 {
+    margin-top: 8px;
+    text-align: center;
+    color: #f8f8fc;
+    vertical-align: middle;
+}
+
+header, section, .container {
+    margin: 0;
+    padding: 0;
+    position: relative;
+}
+
+
+#title-area {
+    height: 38px;
+    background-color: #2b2b55;
+}
+
+#running-area {
+    height: 70px;
+    border-bottom: 1px solid #2b2b55;
+}
+
+#topology-area {
+    height: 40%;
+    border-bottom: 1px solid #2b2b55;
+}
+
+#tab-area {
+    height: 40%;
+}
+
+.tab-container {
+    height: 75%;
+}
+
+header {
+    height: 25px;
+}
+
+header h3 {
+    margin: 2px auto 2px 5px;
+    font-size: 14px;
+    color: #2b2b55;
+}
+
+#topology-header {
+    display: flex;
+}
+
+#topology-header div {
+    margin-top: 5px;
+    margin-left: 10px;
+}
+
+#topology-header span.subtitle {
+    font-weight: bold;
+}
+
+.topology-uuid {
+    width: 400px;
+    border-bottom: 1px solid #8888c3;
+}
+
+section {
+    height: 90%;
+}
+
+.toolbar {
+    padding: 4px;
+    margin-bottom: 8px;
+    display: inline-block;
+}
+
+.toolbar > .ui-selectmenu-button {
+    vertical-align: middle;
+}
+
+.tab-container .toolbar .send-btn {
+    background-color: #552b55;
+    color: #f8f8fc;
+}
+
+
+/*
+ * table in container
+ */
+
+.container table, .tab-container table {
+    width: 100%;
+    border-collapse: collapse;
+    font: 12px monospace;
+}
+
+.container th, .tab-container th {
+    border-bottom: solid 1px #2b2b55;
+}
+
+.container td, .tab-container td {
+    text-align: center;
+}
+
+.table-subtitle {
+    font-weight: bold;
+}
+
+/*
+ * ellipsis
+ */
+#running-table .ellipsis {
+    width: 120px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+#scenario-list .ellipsis {
+    width: 300px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+#scenario-list .scenario-list-selected {
+    background-color: #2c2c77;
+    color: #eeeef6;
+}
+
+/*
+ * entity table
+ */
+#entities-table tbody tr {
+    border-bottom: solid 1px #aaa;
+    color: #ccc;
+}
+
+#entities-table tbody .entities-hv {
+    background-color: #3c3c37 !important;
+}
+
+#entities-table tbody tr td:first-child {
+    width: 35px;
+    padding-left: 20px;
+}
+
+.se-selected {
+    background-color: #2b2b55 !important;
+    color: white !important;
+}
+
+/*
+ * topology
+ */
+#topology-box {
+    position: relative;
+    height: 100%;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.have-map {
+    background-image: url('../images/japaneseIsland_2_30percent.png');
+    background-repeat: no-repeat;
+    background-position: center top;
+}
+
+#topology-box-bg {
+    text-align: center;
+    background-color: transparent;
+    font-size: 36px;
+    width: 100%;
+    height: 100%;
+}
+
+.node {
+    position: absolute;
+}
+
+/* 
+ * topology element state name for normal/subtopology/scenario mode
+ *
+ * [node svg]
+ *     state: normal               .node-ele-normal
+ *     state: subtopology enable   .node-ele-subt-enable
+ *     state: subtopology disable  .node-ele-subt-disable
+ *     state: subtopology hover    .node-ele-subt-hover
+ *     state: transparent          .node-ele-transparent
+ *     (no need for senario mode)
+ *
+ * [node label]
+ *     state: normal               .node-label-normal
+ *     state: subtopology enable   .node-label-subt-enable
+ *     state: subtopology disable  .node-label-subt-disable
+ *     state: subtopology hover    .node-label-subt-hover
+ *     state: transparent          .node-label-transparent
+ *     (no need for senario mode)
+ *
+ * [endpoint]
+ *     state: normal               .endp-normal
+ *     state: subtopology enable   .endp-subt-enable
+ *     state: subtopology disable  .endp-subt-disable
+ *     state: subtopology hover    .endp-subt-hover
+ *     state: scenario normal      .endp-scenario-normal
+ *     state: scenario faulted     .endp-scenario-faulted
+ *     state: scenario hover       .endp-scenario-hover
+ *     state: scenario highlight   .endp-scenario-highlight
+ *     state: transparent          .endp-transparent
+ *     (no need for subtopology mode)
+ *
+ * [connection]
+ *     state: normal               .conn-normal
+ *     state: subtopology enable   .conn-subt-enable
+ *     state: subtopology disable  .conn-subt-disable
+ *     state: subtopology hover    .conn-subt-hover
+ *     state: scenario normal      .conn-scenario-normal
+ *     state: scenario faulted     .conn-scenario-faulted
+ *     state: scenario hover       .conn-scenario-hover
+ *     state: scenario highlight   .conn-scenario-highlight
+ *     state: transparent          .conn-transparent
+ *
+ * [connection label]
+ *     state: normal               .conn-label-normal
+ *     state: subtopology enable   .conn-label-subt-enable
+ *     state: subtopology disable  .conn-label-subt-disable
+ *     state: subtopology hover    .conn-label-subt-hover
+ *     state: scenario normal      .conn-label-scenario-normal
+ *     state: scenario faulted     .conn-label-scenario-faulted
+ *     state: scenario hover       .conn-label-scenario-hover
+ *     state: scenario highlight   .conn-label-scenario-highlight
+ *     state: transparent          .conn-label-transparent
+ *
+ */
+
+.node-ele-normal circle {
+    fill: rgba(53, 53, 53, 0.8);
+}
+.node-ele-subt-enable circle {
+    fill: rgba(53, 53, 53, 0.8);
+}
+.node-ele-subt-disable circle {
+    fill: #b1b1b1;
+}
+.node-ele-subt-hover circle {
+    fill: #99ffcc;
+}
+.node-ele-transparent circle {
+    fill-opacity: 0;
+}
+
+.node-label {
+    text-align: center;
+    font-size: smaller;
+    margin-left: -55px;
+    -webkit-transition: -webkit-box-shadow 0.15s ease-in;
+    -moz-transition: -moz-box-shadow 0.15s ease-in;
+    -o-transition: -o-box-shadow 0.15s ease-in;
+    transition: box-shadow 0.15s ease-in;
+}
+
+.node-label h4 {
+    margin: 0;
+    font-size: larger;
+}
+
+.node-label-normal .node-label {
+    color: black;
+    background-color: rgba(170, 170, 170, 0.7);
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.node-label-subt-enable .node-label {
+    color: black;
+    background-color: rgba(170, 170, 170, 0.7);
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.node-label-subt-disable .node-label {
+    color: #aaa;
+    background-color: rgba(170, 170, 170, 0,8);
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.node-label-subt-hover .node-label {
+    color: black;
+    background-color: rgba(153, 255, 204, 0.7);
+    box-shadow: 0 4px 8px 0 rgba(153, 255, 204, 0.2), 0 6px 20px 0 rgba(153, 255, 204, 0.19);
+}
+
+.node-label-transparent .node-label {
+    color: transparent;
+    background-color: transparent;
+}
+
+.endp-normal svg circle {
+    fill: #c3a689;
+    stroke: #c3a689;
+    stroke-width: 0;
+}
+.endp-subt-enable svg circle {
+    fill: #c3a689;
+    stroke: #c3a689;
+    stroke-width: 0;
+}
+.endp-subt-disable svg circle {
+    fill: #b1b1b1;
+    stroke: #b1b1b1;
+    stroke-width: 0;
+}
+.endp-subt-hover svg circle {
+    fill: #99ffcc;
+    stroke: #99ffcc;
+    stroke-width: 0;
+}
+.endp-scenario-normal svg circle {
+    fill: #c3a689;
+    stroke: #c3a689;
+    stroke-width: 0;
+}
+.endp-scenario-faulted svg circle {
+    fill: #c3a689;
+    stroke: #33cc33;
+    stroke-width: 3;
+}
+.endp-scenario-hover svg circle {
+    fill: #99ffcc;
+    stroke: #99ffcc;
+    stroke-width: 0;
+}
+.endp-scenario-highlight svg circle {
+    fill: #c3a689;
+    stroke: #ff1a1a;
+    stroke-width: 3;
+}
+.endp-transparent svg circle {
+    fill-opacity: 0;
+}
+
+.conn-normal path {
+    stroke: #454587;
+}
+.conn-subt-enable path {
+    stroke: #454587;
+}
+.conn-subt-disable path {
+    stroke: #b1b1b1;
+}
+.conn-subt-hover path {
+    stroke: #99ffcc;
+}
+.conn-scenario-normal path {
+    stroke: #454587;
+}
+.conn-scenario-faulted path {
+    stroke: #33cc33;
+}
+.conn-scenario-hover path {
+    stroke: #99ffcc;
+}
+.conn-scenario-highlight path {
+    stroke: #ff1a1a;
+}
+.conn-transparent path {
+    stroke-opacity: 0;
+}
+
+.conn-label {
+}
+
+.conn-label-normal {
+    color: black !important;
+}
+.conn-label-subt-enable {
+    color: black !important;
+}
+.conn-label-subt-disable {
+    color: #b1b1b1 !important;
+}
+.conn-label-subt-hover {
+    color: black !important;
+}
+.conn-label-scenario-normal {
+    color: black !important;
+}
+.conn-label-scenario-faulted {
+    color: black !important;
+}
+.conn-label-scenario-hover {
+    color: black !important;
+}
+.conn-label-scenario-highlight {
+    color: #ff1a1a !important;
+}
+.conn-label-transparent {
+    color: transparent;
+    background-color: transparent;
+}
+
+/*
+ * Scenario list area
+ */
+#scenario-list-area {
+    position: absolute;
+    top: 0px;
+    left: 10px;
+    width: 95%;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    border-radius: 10px;
+    border: 2px solid #2b2b55;
+}
+
+#scenario-list-area #scenario-list-header {
+    height: 30px;
+}
+
+#scenario-list-area #scenario-list-header h3 {
+    background-color: #2b2b55;
+    color: #f8f8fc;
+    height: 100%;
+    padding: 5px 10px;
+    margin: 0;
+}
+
+/*
+ * menu
+ */
+.point-menu {
+    position: absolute;
+}
+
+.point-menu .fault-menu-header {
+    padding: 0.2em;
+    background-color: #2b2b55;
+    color: #f8f8fc;
+}
+
+#faults-menu .subtitle {
+    font-weight: bold;
+}
+
+#faults-menu .pm_fault_time {
+    color: #552b55;
+    display: inline-block;
+    margin-left: 10px;
+}
+
+
+/*
+ * dialog
+ */
+.no-close .ui-dialog-titlebar-close {
+    display: none;
+}
+
+.ui-dialog > .ui-dialog-titlebar {
+    font-size: larger;
+    background-color: #2b2b55;
+    color: #f8f8fc;
+}
+
+.dialog-table {
+    width: 100%;
+    border-collapse: collapse;
+    font: 12px monospace;
+}
+
+.dialog-table th {
+    border-bottom: solid 1px #2b2b55;
+    max-width: 200px;
+    white-space: nowrap;
+    text-align: right;
+}
+
+.dialog-table td {
+    text-align: left;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    padding-left: 15px;
+}
+
+.dialog-table input {
+}
+
+
+.dialog-table input:read-only {
+    background-color: #f1eae2;
+}
+
+.dialog-table #scenario-end-time {
+    width: 5em;
+}
+
+.ui-datepicker-trigger {
+    margin-left: 5px;
+}
+
+/*
+ * modal dialog
+ */
+
+.modal-dialog {
+    background-color: #f8f8fc;
+    padding-bottom: 10px;
+}
+
+.modal-dialog h1 {
+    background-color: #2b2b55;
+    color: #f8f8fc;
+    margin: 0;
+    padding: 0;
+    font-size: 20px;
+}
+
+.modal-dialog h2 {
+    color: #2b2b55;
+    margin-bottom: 15px;
+    padding: 0;
+    font-size: 18px;
+}
+
+.modal-dialog h3 {
+    color: #2b2b55;
+    margin: 0 10px 15px 10px;
+    padding: 0;
+    text-align: center;
+}
+
+#error-dialog h1 {
+    background-color: #e60000;
+    color: #f8f8fc;
+    margin: 0;
+    padding: 0;
+}
+
+/*
+ * log
+ */
+#log-flex {
+    background-color: #e9e9e9;
+    padding: 5px 0 5px 10px;
+}
+
+#log-section {
+    margin-top: 5px;
+    width: 100%;
+}
+
+#log-table td {
+    text-align: left;
+}
+
+.toolbox label {
+    font-weight: bold;
+}
+
+#log-toolbox {
+    display: flex;
+}
+
+#log-toolbox label {
+    display: block;
+    width: 120px;
+    margin: 5px 0 0 0;
+    font-weight: bold;
+    font-size: 11px;
+}
+
+#log-toolbox select {
+    width: 200px;
+}
+
+#log-toolbox .overflow {
+    height: 100px;
+}
+
+#log-toolbox .ui-selectmenu-button span.ui-selectmenu-text {
+    padding: 0 2.1em 0 1em;
+}
+
+#log-toolbox-time label[for=log-end-time-picker] {
+    margin-left: 10px;
+}
+
+#log-any {
+    width: 90%;
+}
+
+#search-radio {
+    display: inline-block;
+}
+
+/*
+ * Growl
+ */
+#growl p {
+    padding: 5px;
+    margin: 0;
+    color: #000;
+    font-size: 12px;
+    font-weight: bold;
+    text-align: left;
+}
+
+.growl-success {
+    background-color: #66b3ff;
+}
+
+.growl-info {
+    background-color: #66ff66;
+}
+
+.growl-warning {
+    background-color: #ffff66;
+}
+
+.growl-error {
+    background-color: #ff6666;
+}
+

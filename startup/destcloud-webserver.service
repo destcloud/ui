@@ -1,0 +1,16 @@
+[Unit]
+Description=Destcloud Web Server
+After=network.target
+
+[Service]
+User=root
+StandardOutput=null
+StandardError=syslog
+SyslogIdentifier=destcloud1
+Environment=PORT=80 NODE_ENV=production
+WorkingDirectory=/home/chuko/DESTCloud1-Server
+ExecStart=/home/chuko/DESTCloud1-Server/bin/www
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

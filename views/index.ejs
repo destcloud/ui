@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-language" content="ja">
+    <meta charset="UTF-8">
+
+    <title>DESTCloud</title>
+
+    <link rel='stylesheet' href='/stylesheets/dc.css' />
+    <link rel="stylesheet" href="/stylesheets/jquery-ui.min.css" />
+    <link rel="stylesheet" href="/stylesheets/jquery-ui-timepicker-addon.min.css" />
+    <link rel="stylesheet" href="/stylesheets/dataTables.jqueryui.min.css" />
+
+
+    <script src="/javascripts/libs/jquery.js"></script>
+    <script src="/javascripts/libs/jquery-ui.min.js"></script>
+    <script src="/javascripts/libs/jquery.blockUI.js"></script>
+    <script src="/javascripts/libs/jquery-ui-timepicker-addon.min.js"></script>
+    <script src="/javascripts/libs/jsPlumb-2.0.4-min.js"></script>
+<!--
+    <script src="/javascripts/libs/jsPlumb-2.0.4.js"></script>
+-->
+    <script src="/javascripts/libs/jquery.dataTables.min.js"></script>
+    <script src="/javascripts/libs/dataTables.jqueryui.min.js"></script>
+    <script src="/javascripts/libs/esprima.js"></script>
+    <script src="/javascripts/libs/js-yaml.min.js"></script>
+
+    <!-- NOTE: for debug -->
+    <!-- <script src="/javascripts/src/dc.min.js"></script> -->
+
+    <script src="/javascripts/src/DC.js"></script>
+    <script src="/javascripts/src/Config.js"></script>
+    <script src="/javascripts/src/Utils.js"></script>
+    <script src="/javascripts/src/Grid.js"></script>
+    <script src="/javascripts/src/UuidHistory.js"></script>
+    <script src="/javascripts/src/Entity.js"></script>
+    <script src="/javascripts/src/Fault.js"></script>
+    <script src="/javascripts/src/FaultMenu.js"></script>
+    <script src="/javascripts/src/EndpointMenu.js"></script>
+    <script src="/javascripts/src/ConnectionMenu.js"></script>
+    <script src="/javascripts/src/Node.js"></script>
+    <script src="/javascripts/src/TransparentNode.js"></script>
+    <script src="/javascripts/src/ScenarioPanel.js"></script>
+    <script src="/javascripts/src/ScenarioList.js"></script>
+    <script src="/javascripts/src/EntitiesPanel.js"></script>
+    <script src="/javascripts/src/Topology.js"></script>
+    <script src="/javascripts/src/TopologyPanel.js"></script>
+    <script src="/javascripts/src/LogPanel.js"></script>
+
+    <script src="/javascripts/src/dcmain.js"></script>
+</head>
+<body>
+
+<!-------------------------------------------------------------->
+<!------------------------  Header Area  ----------------------->
+<!-------------------------------------------------------------->
+<div id="title-area" class="container">
+    <h1>DESTCloud</h1>
+</div>
+
+<!-------------------------------------------------------------->
+<!-----------------------  Running Scenario Area --------------->
+<!-------------------------------------------------------------->
+<div id="running-area" class="container">
+    <header id="running-header" class="area-header">
+	<h3 class="area-title">Running Scenario</h3>
+    </header>
+    <section id="running-section">
+	<table id="running-table">
+	    <thead>
+		<tr>
+		    <th>Status</th>
+		    <th>Scenario ID</th>
+		    <th>Job ID</th>
+		    <th>Start Time</th>
+		    <th>End Time</th>
+		    <th>Faults</th>
+		</tr>
+	    </thead>
+	    <tbody>
+		<tr>
+		    <td id="running-status"></td>
+		    <td id="running-scenario-id">
+			<p class="ellipsis"></p>
+		    </td>
+		    <td id="running-job-id">
+			<p class="ellipsis"></p>
+		    </td>
+		    <td id="running-start-time"></td>
+		    <td id="running-end-time"></td>
+		    <td id="running-fault">
+			<p class="ellipsis"></p>
+		    </td>
+		</tr>
+	    </tbody>
+	</table>
+    </section>
+</div>
+
+<!-------------------------------------------------------------->
+<!-----------------------  Topology Area  ---------------------->
+<!-------------------------------------------------------------->
+<div id="topology-area" class="container">
+    <header id="topology-header" class="area-header">
+	<h3 class="area-title">Topology</h3>
+	<div class="topology-toolbox">
+	    <div id="entire-topology-box" class="topology-uuid">
+		<span class="subtitle">Entire Topology ID:</span>
+		<span id="entire-topology-id"></span>
+	    </div>
+	    <div id="sub-topology-box" class="topology-uuid">
+		<span class="subtitle">Sub Topology ID:</span>
+		<span id="sub-topology-id"></span>
+	    </div>
+	</div>
+    </header>
+    <section id="topology-section">
+	<div id="topology-box" class="topology-box have-map">
+	    <div id="topology-box-bg" style="display:none;">
+		Scenario Mode
+	    </div>
+	</div>
+    </section>
+    <!------------------  Scenario List Area ----------------------->
+    <div id="scenario-list-area" class="" style="display: none;">
+	<header id="scenario-list-header" class="area-header">
+	    <h3 class="area-scenario-list">Senario List</h3>
+	</header>
+	<section id="scenario-list-section">
+	    <div id="scenario-list-table-box">
+		<table id="scenario-list" class="compact stripe hover">
+		    <thead>
+			<tr>
+			    <th>Scenario ID</th>
+			    <th>Creation Time</th>
+			    <th>Fault</th>
+			    <th>Scenario YAML</th>
+			</tr>
+		    </thead>
+		    <tbody class="">
+		    </tbody>
+		</table>
+	    </div>
+	</section>
+    </div>
+</div>
+
+
+<!-------------------------------------------------------------->
+<!----------------------------  Tab Area  ---------------------->
+<!-------------------------------------------------------------->
+<div id="tab-area" class="container">
+    <ul>
+	<li><a href="#entities-area">Entities</a></li>
+	<li><a href="#scenario-area">Scenario</a></li>
+	<li><a href="#log-area">Log</a></li>
+    </ul>
+    <!-------------------------------------------------------------->
+    <!-----------------------  Entities Tab  ----------------------->
+    <!-------------------------------------------------------------->
+    <div id="entities-area" class="tab-container">
+	<div id="entities-toolbar" class="toolbar ui-widget-header ui-corner-all">
+	    <button id="send-entities-btn" class="send-btn">Set Entities</button>
+	    <button id="clear-entities-btn" class="">Clear Entities</button>
+	</div>
+	<div id="subtopology-toolbar" class="toolbar ui-widget-header ui-corner-all">
+	    <button id="send-subtopology-btn" class="send-btn">Set Sub Topology</button>
+	    <input type="checkbox" id="subtopology-mode-toggle" class="">
+		<label for="subtopology-mode-toggle">Select Sub Topology</label>
+<!--
+	    <button id="clear-subtopology-btn" class="">Clear Sub Topology</button>
+-->
+	</div>
+	<section id="entities-section">
+	    <table id="entities-table" class="">
+		<thead>
+		    <tr>
+			<th></th>
+			<th>Entity Name</th>
+			<th>Address</th>
+			<th>Port</th>
+			<th>Protocol</th>
+			<th>Network OS</th>
+			<th>User</th>
+			<th>Password</th>
+			<th></th>
+		    </tr>
+		</thead>
+		<tbody>
+		    <tr id="entities-add-row">
+			<td>
+			    <button id="add-entity-btn" class="add-btn">Add</button>
+			</td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td></td>
+		    </tr>
+		</tbody>
+	    </table>
+	</section>
+    </div>
+    <!----------------------  Send SubTopology Dialog  ----------------------->
+    <div id="send-subtopology-dialog" class="dialog no-close-btn" title="Set Sub Topology" style="display: none;">
+	<div id="detail-subtopology"></div>
+    </div>
+
+    <!-------------------------------------------------------------->
+    <!-----------------------  Scenario Area ----------------------->
+    <!-------------------------------------------------------------->
+    <div id="scenario-area" class="tab-container">
+	<div id="scenario-toolbar" class="toolbar ui-widget-header ui-corner-all">
+	    <button id="clear-scenario-btn" class="">Clear Scenario</button>
+	    <button id="send-scenario-btn" class="send-btn">Set Scenario</button>
+	    <input type="checkbox" id="scenario-mode-toggle" class="">
+		<label for="scenario-mode-toggle">Scenario Mode</label>
+	</div>
+	<div id="scenario-list-toolbar" class="toolbar ui-widget-header ui-corner-all">
+	    <input type="checkbox" id="scenario-list-toggle" class="">
+		<label for="scenario-list-toggle">Scenario List</label>
+	</div>
+	<section id="scenario-section">
+	    <div>
+		<span class="subtitle">Scenario ID</span>
+		<span id="scenario-table-scenario-id"></span>
+	    </div>
+
+	    <div id="scenario-table-box">
+		<table id="scenario-table" class="compact stripe hover">
+		    <thead>
+			<tr>
+			    <th>　</th>
+			    <th>Fault Type</th>
+			    <th>Fault ID</th>
+			    <th>Time</th>
+			    <th colspan="2">Option</th>
+			</tr>
+		    </thead>
+		    <tbody class="">
+		    </tbody>
+		</table>
+	    </div>
+	</section>
+    </div>
+    
+    <!------------------------  Send Scenario Dialog  ----------------------->
+    <div id="send-scenario-dialog" class="dialog no-close-btn" title="Set Scenario" style="display: none;">
+	<table class="dialog-table">
+	    <tr>
+		<th>
+		    Scenario ID:
+		</th>
+		<td>
+		    <span id="scenario-id" class="uuid"></span><br/>
+		</td>
+	    </tr>
+	    <tr>
+		<th>
+		    <label for="scenario-start-time">Start Time:</label>
+		</th>
+		<td>
+		    <input type="text" id="scenario-start-time-picker" name="scenario-start-time" readonly />
+		</td>
+	    </tr>
+	    <tr>
+		<th>
+		    <label for="scenario-end-time">End Time:</label>
+		</th>
+		<td>
+		    <input type="text" id="scenario-end-time-str" readonly />
+		    <input type="number" id="scenario-end-time" name="scenario-end-time" /><span class="unit">[ms]</span>
+		</td>
+	    </tr>
+	</table>
+    </div>
+
+    <!-------------------------------------------------------------->
+    <!-----------------------  Log Area  ---------------------->
+    <!-------------------------------------------------------------->
+    <div id="log-area" class="tab-container">
+	<div id="log-toolbar-update" class="toolbar ui-widget-header ui-corner-all">
+	    <input type="checkbox" id="destcloud-only-toggle"><label for="destcloud-only-toggle">DESTCloud logs</label>
+	    <input type="checkbox" id="auto-update-toggle"><label for="auto-update-toggle">Auto Update</label>
+	    <select id="auto-update-period">
+		<option value="1">1</option>
+		<option value="2">2</option>
+		<option value="3" selected>3</option>
+		<option value="4">4</option>
+		<option value="5">5</option>
+		<option value="6">6</option>
+		<option value="7">7</option>
+		<option value="8">8</option>
+		<option value="9">9</option>
+		<option value="10">10</option>
+	    </select><span class="unit">[sec]</span>
+	    
+	</div>
+	<div id="log-toolbar-search" class="toolbar ui-widget-header ui-corner-all">
+	    <div id="search-radio">
+		<input type="radio" id="search-time-btn" name="search-radio"><label for="search-time-btn">Search Time Range</label>
+		<input type="radio" id="search-uuids-btn" name="search-radio"><label for="search-uuids-btn">Search UUIDs</label>
+		<input type="radio" id="search-text-btn" name="search-radio"><label for="search-text-btn">Search Text</label>
+	    </div>
+		<button id="search-all-btn">Clear Filter & Get</button>
+	</div>
+	<div id="log-flex">
+	    <div id="log-toolbox-time" class="toolbox">
+		<label for="log-start-time-picker">Start Time</label>
+		<input type="text" id="log-start-time-picker" name="log-start-time" readonly />
+		<label for="log-end-time-picker">End Time</label>
+		<input type="text" id="log-end-time-picker" name="log-end-time" readonly />
+	    </div>
+	    <div id="log-toolbox" class="toolbox">
+		<div>
+		    <label for="log-entire-topology-id">Entire Topology ID</label>
+		    <select name="log-entire-topology-id" id="log-entire-topology-id">
+		    </select>
+		</div>
+		<div>
+		    <label for="log-subtopology-id">Sub Topology ID</label>
+		    <select name="log-subtopology-id" id="log-subtopology-id">
+		    </select>
+		    <label for="log-nodes-id">Entity ID</label>
+		    <select name="log-nodes-id" id="log-nodes-id">
+		    </select>
+		    <label for="log-lines-id">Line ID</label>
+		    <select name="log-lines-id" id="log-lines-id">
+		    </select>
+		</div>
+		<div>
+		    <label for="log-scenario-id">Scenario ID</label>
+		    <select name="log-scenario-id" id="log-scenario-id">
+		    </select>
+		</div>
+		<div>
+		    <label for="log-job-id">Job ID</label>
+		    <select name="log-job-id" id="log-job-id">
+		    </select>
+		    <label for="log-fault-id">FaulFault ID</label>
+		    <select name="log-fault-id" id="log-fault-id">
+		    </select>
+		</div>
+	    </div>
+	    <div id="log-toolbox-fault" class="toolbox">
+		<label for="log-any">Text</label>
+		<input name="log-any" id="log-any" type="text" />
+	    </div>
+	    <section id="log-section">
+		<div id="log-box">
+		    <table id="log-table" class="compact stripe hover">
+		    <thead>
+			<tr>
+			    <th>Date</th>
+			    <th>Ident</th>
+			    <th>Host</th>
+			    <th>Message</th>
+			</tr>
+		    </thead>
+		    <tbody>
+		    </tbody>
+		    </table>
+		</div>
+	    </section>
+	</div>
+    </div>
+</div>
+
+<!-------------------------------------------------------------->
+<!----------------------  Entities Dialogs  -------------------->
+<!-------------------------------------------------------------->
+<div id="add-entity-dialog" class="dialog no-close-btn" title="Add Entity" style="display: none;">
+    <table class="dialog-table">
+	<tr>
+	    <th>Entity Name</th>
+	    <td><input type="text" id="add-entity-entity-name"></td>
+	</tr>
+	<tr>
+	    <th>Address</th>
+	    <td>
+		<input type="text" id="add-entity-ip4-addr" />
+	    </td>
+	</tr>
+	<tr>
+	    <th>Port</th>
+	    <td><input type="number" id="add-entity-port-number"></td>
+	</tr>
+	<tr>
+	    <th>Protocol</th>
+	    <td><input type="text" id="add-entity-protocol"></td>
+	</tr>
+	<tr>
+	    <th>Network OS</th>
+	    <td><input type="text" id="add-entity-network-os"></td>
+	</tr>
+	<tr>
+	    <th>User Name</th>
+	    <td><input type="text" id="add-entity-username"></td>
+	</tr>
+	<tr>
+	    <th>Password</th>
+	    <td><input type="text" id="add-entity-password"></td>
+	</tr>
+    </table>
+</div>
+
+<!-------------------------------------------------------------->
+<!-----------------  Scenario Detail Dialogs  ------------------>
+<!-------------------------------------------------------------->
+<div id="scenario-detail-dialog" class="dialog no-close-btn" title="Scenario" style="display: none;">
+    <table class="dialog-table">
+	<tr>
+	    <th>Scenario ID</th>
+	    <td id="detail-scenario-id"></td>
+	</tr>
+	<tr>
+	    <th>Creation Time</th>
+	    <td id="detail-creation-time"></td>
+	</tr>
+	<tr>
+	    <th>Scenario</th>
+	    <td id="detail-scenario"><pre></pre></td>
+	</tr>
+    </table>
+</div>
+
+<!-------------------------------------------------------------->
+<!----------------  Scenario "port down" Dialogs  -------------->
+<!-------------------------------------------------------------->
+<div id="port-down-dialog" class="dialog no-close-btn"
+    title="Port Down" style="display: none;">
+    <table class="dialog-table">
+	<tr>
+	    <th>Fault ID</th>
+	    <td id="port-down-fault-id"></td>
+	</tr>
+	<tr>
+	    <th>Time</th>
+	    <td id="port-down-time">
+		<input type="number" class="relative-time-w" value="0"/>
+		<span class="unit">[ms]</span>
+	    </td>
+	</tr>
+	<tr>
+	    <th>Router ID</th>
+	    <td id="port-down-router-id"></td>
+	</tr>
+	<tr>
+	    <th>Interface Number</th>
+	    <td id="port-down-interface-number"></td>
+	</tr>
+    </table>
+</div>
+<!-------------------------------------------------------------->
+<!----------------  Scenario "packet loss" Dialogs  ------------>
+<!-------------------------------------------------------------->
+<div id="packet-loss-dialog" class="dialog no-close-btn"
+    title="Packet Loss" style="display: none;">
+    <table class="dialog-table">
+	<tr>
+	    <th>Fault ID</th>
+	    <td id="packet-loss-fault-id"></td>
+	</tr>
+	<tr>
+	    <th>Time</th>
+	    <td id="packet-loss-time">
+		<input type="number" class="relative-time-w" value="0"/>
+		<span class="unit">[ms]</span>
+	    </td>
+	</tr>
+	<tr>
+	    <th>Line ID</th>
+	    <td id="packet-loss-line-id"></td>
+	</tr>
+	<tr>
+	    <th>Loss Ratio</th>
+	    <td id="packet-loss-loss-ratio">
+		<p><span id="loss-ratio-value">50</span>%</p>
+		<div id="loss-ratio-slider"></div>
+	    </td>
+	</tr>
+    </table>
+</div>
+<!-------------------------------------------------------------->
+<!-------------  Scenario "traffic shaping" Dialogs  ----------->
+<!-------------------------------------------------------------->
+<div id="traffic-shaping-dialog" class="dialog no-close-btn"
+    title="Traffic Shaping" style="display: none;">
+    <table class="dialog-table">
+	<tr>
+	    <th>Fault ID</th>
+	    <td id="traffic-shaping-fault-id"></td>
+	</tr>
+	<tr>
+	    <th>Time</th>
+	    <td id="traffic-shaping-time">
+		<input type="number" class="relative-time-w" value="0">
+		<span class="unit">[ms]</span>
+	    </td>
+	</tr>
+	<tr>
+	    <th>Line ID</th>
+	    <td id="traffic-shaping-line-id"></td>
+	</tr>
+	<tr>
+	    <th>Bandwidth</th>
+	    <td id="traffic-shaping-bandwidth">
+		<input type="number" value="100"><span class="unit">kbps</span>
+	    </td>
+	</tr>
+    </table>
+</div>
+<!-------------------------------------------------------------->
+<!-------------------  Scenario "delay" Dialogs  --------------->
+<!-------------------------------------------------------------->
+<div id="delay-dialog" class="dialog no-close-btn"
+    title="Delay" style="display: none;">
+    <table class="dialog-table">
+	<tr>
+	    <th>Fault ID</th>
+	    <td id="delay-fault-id"></td>
+	</tr>
+	<tr>
+	    <th>Time</th>
+	    <td id="delay-time">
+		<input type="number" class="relative-time-w" value="0">
+		<span class="unit">[ms]</span>
+	    </td>
+	</tr>
+	<tr>
+	    <th>Line ID</th>
+	    <td id="delay-line-id"></td>
+	</tr>
+	<tr>
+	    <th>Delay</th>
+	    <td id="delay-delay">
+		<input type="number" value="0"><span class="unit">ms</span>
+	    </td>
+	</tr>
+    </table>
+</div>
+<!-------------------------------------------------------------->
+<!----------------  Scenario "recover" Dialogs  -------------->
+<!-------------------------------------------------------------->
+<div id="recover-dialog" class="dialog no-close-btn"
+    title="Recover" style="display: none;">
+    <table class="dialog-table">
+	<tr>
+	    <th>Fault ID</th>
+	    <td id="recover-fault-id"></td>
+	</tr>
+	<tr>
+	    <th>Time</th>
+	    <td id="recover-time">
+		<input type="number" class="relative-time-w" value="0">
+		<span class="unit">[ms]</span>
+	    </td>
+	</tr>
+	<tr>
+	    <th>Recover ID</th>
+	    <td id="recover-recover-id"></td>
+	</tr>
+    </table>
+</div>
+
+<!-------------------------------------------------------------->
+<!-------------------------  error dialog  --------------------->
+<!-------------------------------------------------------------->
+<div id="error-dialog" class="modal-dialog no-close-btn"
+    title="Error" style="display: none;">
+    <h1>Error</h1>
+    <h2>error message</h2>
+    <p>error message</p>
+    <input type="button" id="error-close" value="close" />
+</div>
+
+<!-------------------------------------------------------------->
+<!-----------------------  warning dialog  --------------------->
+<!-------------------------------------------------------------->
+<div id="warning-dialog" class="modal-dialog no-close-btn"
+    title="Warning" style="display: none;">
+    <h1>Warning</h1>
+    <h2>error message</h2>
+    <p>error message</p>
+    <input type="button" id="warning-close" value="close" />
+</div>
+
+<!-------------------------------------------------------------->
+<!----------------------------  growl -------------------------->
+<!-------------------------------------------------------------->
+<div id="growl" class="growl-success" style="display: none;">
+    <p></p>
+</div>
+
+
+<!-------------------------------------------------------------->
+<!---------------------------  Menus  -------------------------->
+<!-------------------------------------------------------------->
+<ul id="fault-endpoint-menu" class="menu point-menu" style="display: none;">
+    <li class="ui-widget-header fault-menu-header">Fault</li>
+    <li id="fault-menu-down">port down</li>
+    <li id="fault-menu-endp-recover" class="ui-state-disabled">recover</li>
+</ul>
+
+<ul id="fault-connection-menu" class="menu point-menu" style="display: none;">
+    <li class="ui-widget-header fault-menu-header">Fault</li>
+    <li id="fault-menu-disconnect">disconnect</li>
+    <li id="fault-menu-loss">packet loss</li>
+    <li id="fault-menu-shaping">traffic shaping</li>
+    <li id="fault-menu-delay">delay</li>
+    <li id="fault-menu-conn-recover" class="ui-state-disabled">recover</li>
+</ul>
+
+
+</body>
+</html>
